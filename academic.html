@@ -1,0 +1,240 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Graffa Exam Planner</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="academic.css" />
+  </head>
+  <body>
+    <main class="planner-shell">
+      <header class="app-header">
+        <div class="title-block">
+          <div class="product-mark">G</div>
+          <div>
+            <h1>Graffa Exam Planner</h1>
+            <p>математика: темы, дни, материалы и контроль подготовки</p>
+          </div>
+        </div>
+
+        <div class="header-metrics" aria-label="Сводка подготовки">
+          <div>
+            <span>Темы</span>
+            <strong id="topicCount">0</strong>
+          </div>
+          <div>
+            <span>Материалы</span>
+            <strong id="materialCount">0</strong>
+          </div>
+          <div>
+            <span>Готовность</span>
+            <strong id="progressCount">0%</strong>
+          </div>
+        </div>
+
+        <div class="header-actions">
+          <button id="saveBtn" type="button">Сохранить</button>
+          <button id="resetBtn" type="button">Сбросить</button>
+        </div>
+      </header>
+
+      <section class="workbench">
+        <aside class="left-panel">
+          <section class="panel-section">
+            <div class="section-head">
+              <h2>Темы курса</h2>
+              <button id="addTopicBtn" type="button">+ Тема</button>
+            </div>
+            <div class="topic-list" id="topicList"></div>
+          </section>
+
+          <section class="panel-section">
+            <div class="section-head">
+              <h2>Ближайшие дни</h2>
+              <button id="addDayBtn" type="button">+ День</button>
+            </div>
+            <div class="day-list" id="dayList"></div>
+          </section>
+
+          <section class="panel-section">
+            <h2>Показать на карте</h2>
+            <div class="filter-grid" id="typeFilters"></div>
+          </section>
+        </aside>
+
+        <section class="graph-zone">
+          <div class="graph-toolbar">
+            <div class="segmented">
+              <button id="mapModeBtn" class="active" type="button">Карта</button>
+              <button id="planModeBtn" type="button">Календарь</button>
+            </div>
+            <div class="tool-buttons">
+              <button id="addMaterialBtn" type="button">+ Материал</button>
+              <button id="addPracticeBtn" type="button">+ Задания</button>
+              <button id="connectBtn" type="button">Связать</button>
+              <button id="deleteBtn" type="button">Удалить</button>
+              <button id="fitBtn" type="button">Вписать</button>
+            </div>
+          </div>
+
+          <div class="canvas-stage" id="canvasStage">
+            <canvas id="plannerCanvas"></canvas>
+            <input
+              class="inline-editor"
+              id="inlineEditor"
+              type="text"
+              maxlength="96"
+              spellcheck="false"
+              aria-label="Переименовать элемент"
+              hidden
+            />
+          </div>
+
+          <div class="plan-view" id="planView" hidden>
+            <div class="calendar-head">
+              <div>
+                <h2>Календарь подготовки</h2>
+                <span>Выбери тему или материал, затем дату, и добавь это в день занятия.</span>
+              </div>
+              <div class="calendar-actions">
+                <button id="prevMonthBtn" type="button">←</button>
+                <strong id="calendarTitle">Май 2026</strong>
+                <button id="nextMonthBtn" type="button">→</button>
+              </div>
+            </div>
+
+            <div class="calendar-layout">
+              <div class="calendar-grid" id="calendarGrid"></div>
+              <aside class="calendar-side">
+                <h2 id="selectedCalendarTitle">Выберите дату</h2>
+                <p id="calendarHelper">Клик по дню покажет занятия и материалы на эту дату.</p>
+                <div class="calendar-items" id="selectedCalendarItems"></div>
+                <button id="createDayOnDateBtn" type="button">Создать учебный день</button>
+                <button id="linkSelectedToDateBtn" type="button">Добавить выбранное в этот день</button>
+              </aside>
+            </div>
+
+            <div class="table-head compact">
+              <h2>Список занятий</h2>
+              <span id="planSummary">3 учебных дня</span>
+            </div>
+            <div class="table-scroll compact">
+              <table>
+                <thead>
+                  <tr>
+                    <th>День</th>
+                    <th>Тема</th>
+                    <th>Материалы</th>
+                    <th>Задания</th>
+                    <th>Статус</th>
+                  </tr>
+                </thead>
+                <tbody id="planRows"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <aside class="right-panel">
+          <section class="panel-section inspector">
+            <div class="section-head">
+              <h2>Выбрано</h2>
+              <span id="selectionBadge">Элемент</span>
+            </div>
+            <label>
+              Название
+              <input id="nameInput" type="text" maxlength="96" />
+            </label>
+            <label>
+              Тип
+              <select id="typeInput">
+                <option value="exam">Экзамен</option>
+                <option value="topic">Тема</option>
+                <option value="day">День</option>
+                <option value="material">Материал</option>
+                <option value="practice">Задания</option>
+                <option value="checkpoint">Контроль</option>
+              </select>
+            </label>
+            <div class="form-row">
+              <label>
+                Дата
+                <input id="dateInput" type="text" maxlength="32" />
+              </label>
+              <label>
+                Минут
+                <input id="durationInput" type="number" min="0" max="300" step="5" />
+              </label>
+            </div>
+            <label>
+              Готовность
+              <input id="progressInput" type="range" min="0" max="100" />
+            </label>
+            <label>
+              Заметки
+              <textarea id="notesInput" maxlength="300"></textarea>
+            </label>
+          </section>
+
+          <section class="panel-section">
+            <h2>Сводка элемента</h2>
+            <div class="metadata-grid" id="metadataGrid"></div>
+          </section>
+
+          <section class="panel-section">
+            <div class="section-head">
+              <h2>Связи</h2>
+              <span id="relationBadge">0</span>
+            </div>
+            <div class="relation-list" id="relationList"></div>
+          </section>
+
+          <section class="panel-section">
+            <div class="section-head">
+              <h2>Материалы</h2>
+              <span class="mini-label">файлы и заметки</span>
+            </div>
+            <div class="upload-box">
+              <label class="file-picker">
+                <input id="materialFileInput" type="file" multiple />
+                <span>Выбрать файлы</span>
+              </label>
+              <input id="materialTitleInput" type="text" maxlength="96" placeholder="Подпись, например: Формулы по тригонометрии" />
+              <textarea
+                id="materialDescriptionInput"
+                maxlength="220"
+                placeholder="Описание: что внутри, кому дать, когда использовать"
+              ></textarea>
+              <button id="uploadMaterialBtn" type="button">Добавить материал</button>
+              <p class="upload-note">Файл остается в этом браузере. Небольшие файлы сохраняются локально, большие — как карточка с названием.</p>
+            </div>
+            <div class="material-list" id="materialList"></div>
+            <div class="material-library" id="uploadedMaterialList"></div>
+          </section>
+
+          <section class="panel-section">
+            <h2>Контроль</h2>
+            <table class="check-table">
+              <thead>
+                <tr>
+                  <th>Дата</th>
+                  <th>Проверка</th>
+                  <th>Статус</th>
+                </tr>
+              </thead>
+              <tbody id="checkpointRows"></tbody>
+            </table>
+          </section>
+        </aside>
+      </section>
+    </main>
+
+    <script src="academic.js"></script>
+  </body>
+</html>

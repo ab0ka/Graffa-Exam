@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Graffa Flow</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <aside class="sidebar">
+        <div class="brand">
+          <div class="brand-mark"></div>
+          <div>
+            <p>Graffa</p>
+            <span>живой граф задач</span>
+          </div>
+        </div>
+
+        <div class="tool-group">
+          <button class="primary-action" id="addNodeBtn" type="button">
+            <span>+</span>
+            <b>Новая капелька</b>
+          </button>
+          <button class="ghost-action" id="connectModeBtn" type="button">
+            <span></span>
+            <b>Связать</b>
+          </button>
+        </div>
+
+        <section class="panel">
+          <p class="panel-label">Выбрано</p>
+          <textarea id="nodeText" maxlength="90" spellcheck="false"></textarea>
+          <div class="tone-picker" id="tonePicker" aria-label="Цвет узла"></div>
+        </section>
+
+        <section class="panel compact">
+          <p class="panel-label">Действия</p>
+          <div class="mini-actions">
+            <button id="focusBtn" type="button" title="Вернуть вид к графу">⌖</button>
+            <button id="deleteBtn" type="button" title="Удалить выбранный объект">⌫</button>
+          </div>
+        </section>
+      </aside>
+
+      <section class="workspace">
+        <div class="topbar">
+          <div>
+            <strong id="statusText">Готово</strong>
+            <span>двигай капельки, соединяй идеи, раскрывай карту</span>
+          </div>
+          <div class="zoom-controls">
+            <button id="zoomOutBtn" type="button" title="Отдалить">−</button>
+            <button id="zoomInBtn" type="button" title="Приблизить">+</button>
+          </div>
+        </div>
+
+        <div class="canvas-wrap" id="canvasWrap">
+          <canvas id="graphCanvas"></canvas>
+          <input
+            class="node-rename"
+            id="renameEditor"
+            type="text"
+            maxlength="90"
+            spellcheck="false"
+            aria-label="Переименовать капельку"
+            hidden
+          />
+          <div class="hint" id="hint">
+            <b>Двойной клик по капельке</b> переименовывает. <b>По пустому месту</b> создает новую.
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <script src="app.js"></script>
+  </body>
+</html>
